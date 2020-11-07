@@ -22,6 +22,21 @@ func main() {
 	}
 }
 
+var searchableFiles []string = []string{
+	".txt",
+	".md",
+	".go",
+	".java",
+	".kt",
+	".clj",
+	".sadl",
+	".smithy",
+	".ell",
+	".xml",
+	".json",
+	"Makefile",
+}
+
 func defaultFilter(info os.FileInfo) bool {
 	name := info.Name()
 	if strings.HasPrefix(name, ".") || strings.HasSuffix(name, "~") || strings.HasPrefix(name, "#") {
@@ -63,7 +78,14 @@ func searchInFile(term string, path string) {
 	if strings.HasPrefix(path, "./") {
 		path = path[2:]
 	}
-	if !strings.HasSuffix(path, ".java") && !strings.HasSuffix(path, ".go") {
+	search := false
+	for _, suffix := range searchableFiles {		
+		if strings.HasSuffix(path, suffix) {
+			search = true
+			break
+		}
+	}
+	if !search {
 		return
 	}
 	bytes, err := ioutil.ReadFile(path)
